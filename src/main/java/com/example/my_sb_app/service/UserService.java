@@ -2,6 +2,7 @@ package com.example.my_sb_app.service;
 
 import com.example.my_sb_app.entity.Role;
 import com.example.my_sb_app.entity.User;
+import com.example.my_sb_app.entity.dto.ProfileUpdateResult;
 import com.example.my_sb_app.repository.UserRepository;
 import com.example.my_sb_app.service.SmptMailSender;
 import java.util.Arrays;
@@ -95,10 +96,12 @@ public class UserService implements UserDetailsService {
         this.userRepository.save(user);
     }
  
-    public void updateProfile(User user, String password, String email) {
+    public ProfileUpdateResult updateProfile(User user, String password, String email) {
         String userEmail = user.getEmail();
-     
+
         boolean isEmailChanged = ((email != null && !email.equals(userEmail)) || (userEmail != null && !userEmail.equals(email)));
+        boolean passwordChanged = !StringUtils.isEmpty(password);  //new
+
         if (isEmailChanged) {
             user.setEmail(email);
             if (!StringUtils.isEmpty(email)) {
@@ -106,12 +109,15 @@ public class UserService implements UserDetailsService {
             }
         }
      
-        if (!StringUtils.isEmpty(password)) {
+        if (passwordChanged) {
             user.setPassword(this.passwordEncoder.encode(password));
         }
      
         this.userRepository.save(user);
-        if (isEmailChanged)
+        if (isEmailChanged) {
             sendMessage(user);
+        }
+
+        return new ProfileUpdateResult(isEmailChanged, passwordChanged);
     }
 }

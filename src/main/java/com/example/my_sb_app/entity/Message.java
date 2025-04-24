@@ -28,7 +28,10 @@ public class Message {
        }
    @ManyToOne(fetch = FetchType.EAGER)
    @JoinColumn(name = "user_id")
-   private User author; private String filename; public Message() {} public String getAuthorName() {
+   private User author;
+   private String filename;
+   public Message() {}
+    public String getAuthorName() {
         return (this.author != null) ? this.author.getUsername() : "<none>";
    }
 

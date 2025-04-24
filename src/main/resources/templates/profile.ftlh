@@ -2,7 +2,12 @@
 
 <@c.page>
     <h5>${username}</h5>
-    ${message!}
+<#--    ${message!}-->
+    <#if message??>
+        <div class="alert alert-info" role="alert">
+            ${message}
+        </div>
+    </#if>
     <form method="post">
         <div class="row mb-3">
             <label class="col-sm-2 col-form-label"> Password: </label>

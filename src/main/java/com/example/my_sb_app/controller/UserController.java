@@ -2,6 +2,7 @@ package com.example.my_sb_app.controller;
 
 import com.example.my_sb_app.entity.Role;
 import com.example.my_sb_app.entity.User;
+import com.example.my_sb_app.entity.dto.ProfileUpdateResult;
 import com.example.my_sb_app.service.UserService;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,8 @@ public class UserController {
     @GetMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public String userList(Model model) {
-        /* 24 */     model.addAttribute("users", this.userService.findAll());
-        /* 25 */     return "userList";
+        model.addAttribute("users", this.userService.findAll());
+        return "userList";
         } @Autowired
     private UserService userService;
     @GetMapping({"{user}"})
@@ -47,9 +48,38 @@ public class UserController {
         return "profile";
     }
 
-    @PostMapping({"profile"})
-    public String updateProfile(@AuthenticationPrincipal User user, @RequestParam String password, @RequestParam String email) {
-        this.userService.updateProfile(user, password, email);
-        return "redirect:/user/profile";
+//    @PostMapping({"profile"})
+//    public String updateProfile(@AuthenticationPrincipal User user,
+//                                @RequestParam String password,
+//                                @RequestParam String email) {
+//        this.userService.updateProfile(user, password, email);
+//        return "redirect:/user/profile";
+//    }
+
+    @PostMapping("/profile")
+    public String updateProfile(
+            @AuthenticationPrincipal User user,
+            @RequestParam String password,
+            @RequestParam String email,
+            Model model
+    ) {
+        ProfileUpdateResult result = userService.updateProfile(user, password, email);
+
+        String message;
+        if (result.isEmailChanged() && result.isPasswordChanged()) {
+            message = "Profile updated";
+        } else if (result.isEmailChanged()) {
+            message = "Check new email";
+        } else if (result.isPasswordChanged()) {
+            message = "Your password updated";
+        } else {
+            message = "No changes detected";
+        }
+
+        model.addAttribute("username", user.getUsername());
+        model.addAttribute("email", user.getEmail());
+        model.addAttribute("message", message);
+
+        return "profile";
     }
 }
