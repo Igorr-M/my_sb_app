@@ -8,7 +8,7 @@
     <div class="card card-body my-3">
         <form method="post" enctype="multipart/form-data">
             <div class="mb-3">
-                <input type="text" name="text" class="form-control ${(textError??)?string('is-invalid', '')}" value="<#if message??>${message.text}</#if>" placeholder="Enter message">
+                <input type="text" name="text" class="form-control ${(textError??)?string('is-invalid', '')}" value="<#if message??>${message.text}</#if>" placeholder="Enter message" />
                 <#if textError??>
                     <div class="invalid-feedback">
                         ${textError}
@@ -16,7 +16,7 @@
                 </#if>
             </div>
             <div class="mb-3">
-                <input type="text" value="<#if message??>${message.tag}</#if>" name="tag" class="form-control ${(tagError??)?string('is-invalid', '')}" placeholder="Enter tag">
+                <input type="text" value="<#if message??>${message.tag}</#if>" name="tag" class="form-control ${(tagError??)?string('is-invalid', '')}" placeholder="Enter tag" />
                 <#if tagError??>
                     <div class="invalid-feedback">
                         ${tagError}
@@ -25,7 +25,7 @@
             </div>
             <div class="mb-3">
                 <label for="formFile" class="form-label">Choose picture</label>
-                <input type="file" name="file" class="form-control" id="formFile">
+                <input type="file" name="file" class="form-control" id="formFile" />
             </div>
             <input type="hidden" name="_csrf" value="${_csrf.token}"/>
             <#if message??>

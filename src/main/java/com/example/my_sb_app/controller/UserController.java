@@ -21,8 +21,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class UserController {
     @GetMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    public String userList(Model model) {
+    public String userList(Model model, @AuthenticationPrincipal User user) {
         model.addAttribute("users", this.userService.findAll());
+        model.addAttribute("user", user);
         return "userList";
         } @Autowired
     private UserService userService;
@@ -45,6 +46,7 @@ public class UserController {
     public String getProfile(Model model, @AuthenticationPrincipal User user) {
         model.addAttribute("username", user.getUsername());
         model.addAttribute("email", user.getEmail());
+        model.addAttribute("user", user);
         return "profile";
     }
 

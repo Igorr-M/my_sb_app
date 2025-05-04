@@ -1,18 +1,18 @@
 <#include "security.ftlh">
 
-<div class="row row-cols-1 row-cols-md-3 g-4">
+<div class="row row-cols-1 row-cols-md-3 g-4" id="message-list">
     <#list messages as message>
-        <div class="col">
+        <div class="col" data-id="${message.id}">
             <div class="card h-100 shadow-sm border-0 rounded-3">
                 <#if message.filename??>
-                    <img src="/img/${message.filename}" class="card-img-top" style="object-fit: cover; height: 200px;">
+                    <img src="/img/${message.filename}" class="card-img-top" style="object-fit: cover; height: 200px;" />
                 <#else>
                     <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center text-white" style="height: 200px;">
                         <span>No image</span>
                     </div>
                 </#if>
                 <div class="m-2" style="font-size: 0.9rem;">
-                    <span>${message.text}</span><br>
+                    <span>${message.text}</span><br />
                     <i class="text-muted">#${message.tag}</i>
                 </div>
                 <div class="card-footer d-flex justify-content-between align-items-center">

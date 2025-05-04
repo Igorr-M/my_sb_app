@@ -31,18 +31,23 @@ public class MainController {
     private String uploadPath;
  
     @GetMapping({"/"})
-    public String greeting(Model model) {
+    public String greeting(Model model, @AuthenticationPrincipal User user) {
+        model.addAttribute("user", user);
         return "greeting";
     }
  
     @GetMapping({"/main"})
-    public String main(@RequestParam(required = false, defaultValue = "") String filter, Model model) {
+    public String main(@RequestParam(required = false, defaultValue = "") String filter,
+                       Model model,
+                       @AuthenticationPrincipal User user)
+    {
         Iterable<Message> messages = this.messageRepository.findAll();
         if (filter != null && !filter.isEmpty()) {
             messages = this.messageRepository.findByTag(filter);
         }
         model.addAttribute("messages", messages);
         model.addAttribute("filter", filter);
+        model.addAttribute("user", user);
         return "main";
     }
  

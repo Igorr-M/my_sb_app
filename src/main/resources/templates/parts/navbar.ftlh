@@ -25,7 +25,7 @@
                         <a class="nav-link active" aria-current="page" href="/user">User list</a>
                     </li>
                 </#if>
-                <#if user?? && name != "unknown">
+                <#if user??>
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/user/profile">Profile</a>
                     </li>
@@ -35,7 +35,7 @@
         <div class="navbar-text me-3">
             <#if user??>${name}<#else>Please, login</#if>
         </div>
-<#--        <#if name != "unknown">-->
+<#--        <#if user?? && name != "unknown">-->
             <@l.logout/>
 <#--        </#if>-->
     </div>
