@@ -1,7 +1,10 @@
 <#include "security.ftlh">
+<#import "pager.ftlh" as p>
+
+<@p.pager url page />
 
 <div class="row row-cols-1 row-cols-md-3 g-4" id="message-list">
-    <#list messages as message>
+    <#list page.content as message>
         <div class="col" data-id="${message.id}">
             <div class="card h-100 shadow-sm border-0 rounded-3">
                 <#if message.filename??>
@@ -31,3 +34,5 @@
         <div>No message</div>
     </#list>
 </div>
+
+<@p.pager url page />
