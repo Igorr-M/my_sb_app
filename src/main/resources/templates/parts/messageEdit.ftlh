@@ -1,3 +1,12 @@
+<#assign formAction = "/main">
+<#if userChannel??>
+    <#if isEditMode?? && isEditMode>
+        <#assign formAction = "/user-messages/${userChannel.id}">
+    <#else>
+        <#assign formAction = "/user-messages/${userChannel.id}/add">
+    </#if>
+</#if>
+
 <#if !isEditMode?? || !isEditMode>
     <button class="btn btn-primary my-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
         Add new message
@@ -6,7 +15,7 @@
 
 <div class="collapse <#if message??>show</#if>" id="collapseExample">
     <div class="card card-body my-3">
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data" action="${formAction}">
             <div class="mb-3">
                 <input type="text" name="text" class="form-control ${(textError??)?string('is-invalid', '')}" value="<#if message??>${message.text}</#if>" placeholder="Enter message" />
                 <#if textError??>

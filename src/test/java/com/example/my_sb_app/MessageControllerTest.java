@@ -1,19 +1,15 @@
 package com.example.my_sb_app;
 
-import com.example.my_sb_app.controller.MainController;
+import com.example.my_sb_app.controller.MessageController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithUserDetails;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.nio.charset.StandardCharsets;
 
@@ -31,11 +27,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithUserDetails(value = "Igor")
 @Sql(value = {"/create-user-before.sql", "/message-list-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(value = {"/message-list-after.sql", "/create-user-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class MainControllerTest {
+public class MessageControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
-    private MainController controller;
+    private MessageController controller;
 
     @Test
     public void mainPageTest() throws Exception {

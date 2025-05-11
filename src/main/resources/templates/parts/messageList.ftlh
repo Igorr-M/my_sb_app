@@ -22,6 +22,13 @@
                     <a href="/user-messages/${message.author.id}" class="text-decoration-none">
                         ${message.authorName}
                     </a>
+                    <a class="text-decoration-none" href="#">
+                        <#if true>
+                            <i class="far fa-heart"></i>
+                        <#else>
+                            <i class="fas fa-heart"></i>
+                        </#if>
+                    </a>
                     <#if message.author.id == currentUserId>
                         <a class="btn btn-sm btn-outline-primary" href="/user-messages/${message.author.id}?message=${message.id}">
                             Edit
