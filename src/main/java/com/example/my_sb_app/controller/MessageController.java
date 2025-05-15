@@ -2,6 +2,7 @@ package com.example.my_sb_app.controller;
 
 import com.example.my_sb_app.entity.Message;
 import com.example.my_sb_app.entity.User;
+import com.example.my_sb_app.entity.dto.MessageDto;
 import com.example.my_sb_app.repository.MessageRepository;
 import com.example.my_sb_app.repository.UserRepository;
 import com.example.my_sb_app.service.MessageService;
@@ -9,6 +10,7 @@ import jakarta.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,11 +23,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Controller
 public class MessageController {
@@ -52,7 +54,7 @@ public class MessageController {
                        @AuthenticationPrincipal User user,
                        @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC, size = 6) Pageable pageable)
     {
-        Page<Message> page = messageService.messageList(pageable, filter);
+        Page<MessageDto> page = messageService.messageList(pageable, filter, user);
 
         model.addAttribute("page", page);
         model.addAttribute("url", "/main");
@@ -81,7 +83,7 @@ public class MessageController {
                 this.messageRepository.save(message);
             }
 
-        Page<Message> page = this.messageService.messageList(pageable, "");
+        Page<MessageDto> page = this.messageService.messageList(pageable, "", user);
         model.addAttribute("page", page);
         model.addAttribute("url", "/main");
         model.addAttribute("user", user);
@@ -110,7 +112,7 @@ public class MessageController {
             @RequestParam(required = false) Message message,
             @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC, size = 6) Pageable pageable
     ) {
-        Page<Message> page = messageService.messageListForUser(pageable, currentUser, author);
+        Page<MessageDto> page = messageService.messageListForUser(pageable, currentUser, author);
 
         model.addAttribute("userChannel", author);
         model.addAttribute("subscriptionsCount", author.getSubscriptions().size());
@@ -174,11 +176,30 @@ public class MessageController {
             this.messageRepository.save(message);
         }
 
-        Page<Message> page = this.messageService.messageList(pageable, "");
+        Page<MessageDto> page = this.messageService.messageList(pageable, "", user);
         model.addAttribute("page", page);
         model.addAttribute("url", "/main");
         model.addAttribute("user", currentUser);
         return "redirect:/user-messages/" + userId;
+    }
+
+    @GetMapping("messages/{message}/like")
+    public String like(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable Message message,
+            RedirectAttributes redirectAttributes,
+            @RequestHeader(required = false) String referer
+    ) {
+        Set<User> likes = message.getLikes();
+        if(likes.contains(currentUser)) {
+            likes.remove(currentUser);
+        } else {
+            likes.add(currentUser);
+        }
+        UriComponents components = UriComponentsBuilder.fromHttpUrl(referer).build();
+        components.getQueryParams().entrySet()
+                .forEach(pair -> redirectAttributes.addAttribute(pair.getKey(), pair.getValue()));
+        return "redirect:" + components.getPath();
     }
     
 }

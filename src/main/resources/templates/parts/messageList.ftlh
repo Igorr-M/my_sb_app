@@ -6,7 +6,7 @@
 <div class="row row-cols-1 row-cols-md-3 g-4" id="message-list">
     <#list page.content as message>
         <div class="col" data-id="${message.id}">
-            <div class="card h-100 shadow-sm border-0 rounded-3">
+            <div class="card h-100 shadow-sm border-0 rounded-3 d-flex flex-column">
                 <#if message.filename??>
                     <img src="/img/${message.filename}" class="card-img-top" style="object-fit: cover; height: 200px;" />
                 <#else>
@@ -14,7 +14,7 @@
                         <span>No image</span>
                     </div>
                 </#if>
-                <div class="m-2" style="font-size: 0.9rem;">
+                <div class="m-2 flex-grow-1" style="font-size: 0.9rem;">
                     <span>${message.text}</span><br />
                     <i class="text-muted">#${message.tag}</i>
                 </div>
@@ -22,12 +22,13 @@
                     <a href="/user-messages/${message.author.id}" class="text-decoration-none">
                         ${message.authorName}
                     </a>
-                    <a class="text-decoration-none" href="#">
-                        <#if true>
-                            <i class="far fa-heart"></i>
-                        <#else>
+                    <a class="text-decoration-none" href="/messages/${message.id}/like">
+                        <#if message.meLiked>
                             <i class="fas fa-heart"></i>
+                        <#else>
+                            <i class="far fa-heart"></i>
                         </#if>
+                        ${message.likes}
                     </a>
                     <#if message.author.id == currentUserId>
                         <a class="btn btn-sm btn-outline-primary" href="/user-messages/${message.author.id}?message=${message.id}">

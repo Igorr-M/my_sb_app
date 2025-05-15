@@ -1,14 +1,12 @@
 package com.example.my_sb_app.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import com.example.my_sb_app.entity.util.MessageHelper;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Message {
@@ -30,9 +28,18 @@ public class Message {
    @JoinColumn(name = "user_id")
    private User author;
    private String filename;
+
+   @ManyToMany
+   @JoinTable(
+           name = "message_likes",
+           joinColumns = { @JoinColumn(name = "message_id") },
+           inverseJoinColumns = { @JoinColumn(name = "user_id")}
+   )
+   private Set<User> likes = new HashSet<>();
+
    public Message() {}
-    public String getAuthorName() {
-        return (this.author != null) ? this.author.getUsername() : "<none>";
+   public String getAuthorName() {
+       return MessageHelper.getAuthorName(author);
    }
 
    public Long getId() {
@@ -74,5 +81,12 @@ public class Message {
    public void setFilename(String filename) {
         this.filename = filename;
    }
-    
+
+    public Set<User> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Set<User> likes) {
+        this.likes = likes;
+    }
 }
