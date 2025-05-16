@@ -22,7 +22,7 @@
                     <a href="/user-messages/${message.author.id}" class="text-decoration-none">
                         ${message.authorName}
                     </a>
-                    <a class="text-decoration-none" href="/messages/${message.id}/like">
+                    <a class="text-decoration-none like-button" href="/messages/${message.id}/like">
                         <#if message.meLiked>
                             <i class="fas fa-heart"></i>
                         <#else>
